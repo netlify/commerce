@@ -24,7 +24,7 @@ func TestTraceWrapper(t *testing.T) {
 	config.Payment.Stripe.Enabled = true
 	config.Payment.Stripe.SecretKey = "secret"
 
-	ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, config, "")
+	ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, config, "", logrus.New())
 	require.NoError(t, err)
 	api := NewAPIWithVersion(ctx, globalConfig, logrus.StandardLogger(), nil, "")
 

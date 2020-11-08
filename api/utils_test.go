@@ -384,7 +384,7 @@ func (r *RouteTest) TestEndpoint(method string, url string, body io.Reader, toke
 		require.NoError(r.T, signHTTPRequest(req, token, r.Config.JWT.Secret))
 	}
 	globalConfig := new(conf.GlobalConfiguration)
-	ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, r.Config, "")
+	ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, r.Config, "", logrus.New())
 	require.NoError(r.T, err)
 	NewAPIWithVersion(ctx, r.GlobalConfig, logrus.StandardLogger(), r.DB, "").handler.ServeHTTP(recorder, req)
 

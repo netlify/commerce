@@ -237,7 +237,7 @@ func TestPaymentsRefund(t *testing.T) {
 
 		globalConfig := new(conf.GlobalConfiguration)
 		provider := &memProvider{name: payments.StripeProvider}
-		ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, test.Config, "")
+		ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, test.Config, "", logrus.New())
 		require.NoError(t, err)
 		ctx = gcontext.WithPaymentProviders(ctx, map[string]payments.Provider{payments.StripeProvider: provider})
 
@@ -628,7 +628,7 @@ func TestPaymentPreauthorize(t *testing.T) {
 			req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
 
 			globalConfig := new(conf.GlobalConfiguration)
-			ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, test.Config, "")
+			ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, test.Config, "", logrus.New())
 			require.NoError(t, err)
 			NewAPIWithVersion(ctx, test.GlobalConfig, logrus.StandardLogger(), test.DB, "").handler.ServeHTTP(recorder, req)
 
@@ -669,7 +669,7 @@ func TestPaymentPreauthorize(t *testing.T) {
 			req.Header.Set("Content-Type", "application/json")
 
 			globalConfig := new(conf.GlobalConfiguration)
-			ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, test.Config, "")
+			ctx, err := WithInstanceConfig(context.Background(), globalConfig.SMTP, test.Config, "", logrus.New())
 			require.NoError(t, err)
 			NewAPIWithVersion(ctx, test.GlobalConfig, logrus.StandardLogger(), test.DB, "").handler.ServeHTTP(recorder, req)
 

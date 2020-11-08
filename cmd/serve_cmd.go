@@ -32,7 +32,7 @@ func serve(globalConfig *conf.GlobalConfiguration, log logrus.FieldLogger, confi
 	}
 	defer bgDB.Close()
 
-	ctx, err := api.WithInstanceConfig(context.Background(), globalConfig.SMTP, config, "")
+	ctx, err := api.WithInstanceConfig(context.Background(), globalConfig.SMTP, config, "", log)
 	if err != nil {
 		log.Fatalf("Error loading instance config: %+v", err)
 	}

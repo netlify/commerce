@@ -29,7 +29,7 @@ type MailSubjects struct {
 }
 
 // NewMailer returns a new authlify mailer
-func NewMailer(smtp conf.SMTPConfiguration, instanceConfig *conf.Configuration) Mailer {
+func NewMailer(smtp conf.SMTPConfiguration, instanceConfig *conf.Configuration, log logrus.FieldLogger) Mailer {
 	if smtp.Host == "" && instanceConfig.SMTP.Host == "" {
 		return newNoopMailer()
 	}
@@ -69,7 +69,7 @@ func NewMailer(smtp conf.SMTPConfiguration, instanceConfig *conf.Configuration) 
 				"price":          price,
 				"hasProductType": hasProductType,
 			},
-			Logger: logrus.New(),
+			Logger: log,
 		},
 	}
 }

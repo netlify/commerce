@@ -14,6 +14,7 @@ import (
 	"github.com/netlify/gocommerce/mailer"
 	"github.com/netlify/gocommerce/models"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -100,7 +101,7 @@ func (api *API) loadInstanceConfig(w http.ResponseWriter, r *http.Request) (cont
 	}
 	logEntrySetField(r, "site_url", config.SiteURL)
 
-	ctx, err = WithInstanceConfig(ctx, api.config.SMTP, config, instanceID)
+	ctx, err = WithInstanceConfig(ctx, api.config.SMTP, config, instanceID, getLogEntry(r))
 	if err != nil {
 		return nil, internalServerError("Error loading instance config").WithInternalError(err)
 	}
@@ -108,7 +109,7 @@ func (api *API) loadInstanceConfig(w http.ResponseWriter, r *http.Request) (cont
 	return ctx, nil
 }
 
-func WithInstanceConfig(ctx context.Context, smtp conf.SMTPConfiguration, config *conf.Configuration, instanceID string) (context.Context, error) {
+func WithInstanceConfig(ctx context.Context, smtp conf.SMTPConfiguration, config *conf.Configuration, instanceID string, log logrus.FieldLogger) (context.Context, error) {
 	ctx = gcontext.WithInstanceID(ctx, instanceID)
 	ctx = gcontext.WithConfig(ctx, config)
 	ctx, err := gcontext.WithCoupons(ctx, config)
@@ -116,7 +117,7 @@ func WithInstanceConfig(ctx context.Context, smtp conf.SMTPConfiguration, config
 		return nil, err
 	}
 
-	mailer := mailer.NewMailer(smtp, config)
+	mailer := mailer.NewMailer(smtp, config, log)
 	ctx = gcontext.WithMailer(ctx, mailer)
 
 	store, err := assetstores.NewStore(config)
